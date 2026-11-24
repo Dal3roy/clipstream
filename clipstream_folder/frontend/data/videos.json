@@ -1,0 +1,75 @@
+{
+  "videos": [
+    {
+      "id": "v_1042",
+      "title": "Three-ingredient flatbreads",
+      "caption": "Three-ingredient flatbreads in ten minutes. No yeast, no oven.",
+      "creator": { "username": "maya.cooks", "displayName": "Maya Okafor", "initials": "MO", "color": "#c2410c" },
+      "tone": "#1f2a37",
+      "sound": "Original sound · Maya Okafor",
+      "tags": ["#cooking", "#quickrecipes", "#student"],
+      "status": "ready",
+      "likeCount": 12480,
+      "createdAt": "2026-11-17T20:00:00Z",
+      "transcript": [
+        "Right, three ingredients: self-raising flour, Greek yoghurt and a pinch of salt.",
+        "Mix until it forms a soft dough, then split it into four.",
+        "Roll each piece thin and cook in a dry pan for about two minutes a side."
+      ]
+    },
+    {
+      "id": "v_1043",
+      "title": "First kickflip on the stairs",
+      "caption": "First clean kickflip down the Cathedral Quarter stairs.",
+      "creator": { "username": "belfast.skate", "displayName": "Belfast Skate Club", "initials": "BS", "color": "#be123c" },
+      "tone": "#3b2f2f",
+      "sound": "Night Drive · Lowtide",
+      "tags": ["#skateboarding", "#belfast"],
+      "status": "ready",
+      "likeCount": 48210,
+      "createdAt": "2026-11-17T15:00:00Z",
+      "transcript": [
+        "Three attempts on this set, and the third one finally stuck.",
+        "Landing was clean, so we're calling it."
+      ]
+    },
+    {
+      "id": "v_1044",
+      "title": "How I revise for stats exams",
+      "caption": "One page per topic, then teach it back.",
+      "creator": { "username": "study.with.tom", "displayName": "Tom Byrne", "initials": "TB", "color": "#047857" },
+      "tone": "#1e3a34",
+      "sound": "Lo-fi study mix · Tom Byrne",
+      "tags": ["#studytips", "#statistics", "#university"],
+      "status": "ready",
+      "likeCount": 7310,
+      "createdAt": "2026-11-16T18:30:00Z",
+      "transcript": [
+        "Step one: one page per topic, with the key formula at the top.",
+        "Step two: close the book and teach the topic out loud. Anything you can't explain, go back to."
+      ]
+    },
+    {
+      "id": "v_1045",
+      "title": "Uploading now",
+      "caption": "Still converting, check back soon.",
+      "creator": { "username": "daleroy", "displayName": "Daleroy C.", "initials": "DC", "color": "#3b5bdb" },
+      "tone": "#27272a",
+      "sound": "Original sound",
+      "tags": [],
+      "status": "processing",
+      "likeCount": 0,
+      "createdAt": "2026-11-18T00:40:00Z",
+      "transcript": []
+    }
+  ],
+  "comments": [
+    { "id": "c_1", "videoId": "v_1042", "username": "jamie_r", "initials": "JR", "color": "#0f766e", "text": "Made these tonight and they actually worked first try.", "createdAt": "2026-11-17T21:10:00Z" },
+    { "id": "c_2", "videoId": "v_1042", "username": "priya.eats", "initials": "PE", "color": "#7c3aed", "text": "Could you use oat milk instead of yoghurt?", "createdAt": "2026-11-17T21:40:00Z" },
+    { "id": "c_3", "videoId": "v_1042", "username": "connor.b", "initials": "CB", "color": "#b45309", "text": "The flip at 0:42 is very satisfying", "createdAt": "2026-11-17T22:05:00Z" },
+    { "id": "c_4", "videoId": "v_1043", "username": "rory.k", "initials": "RK", "color": "#0369a1", "text": "The landing was so clean", "createdAt": "2026-11-17T16:00:00Z" },
+    { "id": "c_5", "videoId": "v_1043", "username": "nia_films", "initials": "NF", "color": "#9333ea", "text": "What camera are you filming on? Honestly the footage is a bit blurry.", "createdAt": "2026-11-17T17:20:00Z" },
+    { "id": "c_6", "videoId": "v_1044", "username": "sam.codes", "initials": "SC", "color": "#b91c1c", "text": "The teach-it-back bit is underrated. Brilliant advice.", "createdAt": "2026-11-16T19:00:00Z" },
+    { "id": "c_7", "videoId": "v_1044", "username": "lucy_h", "initials": "LH", "color": "#0e7490", "text": "Do you do this for maths modules too?", "createdAt": "2026-11-16T20:15:00Z" }
+  ]
+}
