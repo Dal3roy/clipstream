@@ -2,14 +2,15 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from app.config import offline_settings
 from app.main import create_app
 from app.store import DEMO_EMAIL, DEMO_PASSWORD, SEED_PATH, Store
 
 
 @pytest.fixture
 def client():
-    # A fresh store for every test, so tests don't affect each other.
-    return TestClient(create_app(Store.from_seed_file(SEED_PATH)))
+    # A fresh in-memory store for every test, with Azure switched off so tests never touch real services.
+    return TestClient(create_app(Store.from_seed_file(SEED_PATH), offline_settings()))
 
 
 def auth_headers(client, email=DEMO_EMAIL, password=DEMO_PASSWORD):

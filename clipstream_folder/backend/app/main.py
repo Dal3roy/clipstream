@@ -1,11 +1,12 @@
-"""Clipstream API, mock version (step 3).
+"""Clipstream API.
 
-Same endpoints the frontend calls, backed by an in-memory store.
+Two modes, chosen by the settings in backend/.env:
+- Azure mode (COSMOS_URI and COSMOS_KEY set): data lives in Cosmos DB, and uploads go
+  straight to Blob Storage using a short-lived link.
+- Local mode (no Azure settings): in-memory data and a mock upload endpoint.
 
 Run locally from the backend folder:
     uvicorn app.main:app --reload --port 8001
-
-Interactive docs: http://localhost:8001/docs
 """
 from __future__ import annotations
 
@@ -14,15 +15,25 @@ import threading
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
+from .blob import upload_blob_name
+from .blob import upload_url as sas_upload_url
+from .config import Settings, load_settings
+from .cosmos_store import CosmosStore
 from .schemas import CommentIn, LoginIn, MAX_UPLOAD_BYTES, SignupIn, UploadIn
 from .store import SEED_PATH, Store
 
-# How long the mock "processing" step takes. Real conversion and transcription replace this in step 5.
+# Local mode only: how long the fake "processing" takes. Azure Functions replace this in step 5.
 PROCESSING_SECONDS = 4
 MOCK_TRANSCRIPT = ["Mock transcript: real captions come from Azure AI Speech in step 5."]
 
 # The frontend's dev server. Add your Azure Static Web Apps address here when you deploy.
 ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
+
+
+def build_store(settings: Settings):
+    if settings.use_cosmos:
+        return CosmosStore(settings.cosmos_uri, settings.cosmos_key, settings.cosmos_database)
+    return Store.from_seed_file(SEED_PATH)
 
 
 def _bearer_token(authorization: str | None) -> str | None:
@@ -31,10 +42,11 @@ def _bearer_token(authorization: str | None) -> str | None:
     return None
 
 
-def create_app(store: Store | None = None) -> FastAPI:
-    store = store or Store.from_seed_file(SEED_PATH)
+def create_app(store=None, settings: Settings | None = None) -> FastAPI:
+    settings = settings or load_settings()
+    store = store or build_store(settings)
 
-    app = FastAPI(title="Clipstream API", version="0.3.0-mock")
+    app = FastAPI(title="Clipstream API", version="0.5.0")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=ALLOWED_ORIGINS,
@@ -94,8 +106,15 @@ def create_app(store: Store | None = None) -> FastAPI:
     @app.post("/api/videos/upload-url", status_code=201)
     def create_upload(body: UploadIn, request: Request, user: dict = Depends(current_user)):
         video = store.create_video(user, body.title, body.caption)
-        # Real version: a short-lived SAS URL for Blob Storage. The browser uploads straight there.
-        upload_url = f"{str(request.base_url).rstrip('/')}/api/mock-blob/{video['id']}"
+        if settings.use_blob:
+            # Azure mode: the browser uploads straight to Blob Storage with this link.
+            blob_name = upload_blob_name(video["id"], body.fileName)
+            upload_url = sas_upload_url(
+                settings.storage_account, settings.storage_key, settings.raw_container, blob_name
+            )
+        else:
+            # Local mode: the browser uploads to this API, which discards the file.
+            upload_url = f"{str(request.base_url).rstrip('/')}/api/mock-blob/{video['id']}"
         return {"videoId": video["id"], "uploadUrl": upload_url}
 
     @app.put("/api/mock-blob/{video_id}", status_code=201)
@@ -106,7 +125,6 @@ def create_app(store: Store | None = None) -> FastAPI:
             size += len(chunk)
             if size > MAX_UPLOAD_BYTES:
                 raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "File is larger than 500 MB.")
-        # The bytes are discarded. The timer stands in for conversion and transcription.
         timer = threading.Timer(PROCESSING_SECONDS, store.mark_ready, args=(video_id, MOCK_TRANSCRIPT))
         timer.daemon = True
         timer.start()
